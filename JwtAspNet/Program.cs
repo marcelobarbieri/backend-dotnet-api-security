@@ -1,4 +1,5 @@
 using JwtAspNet.Services;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,7 +10,15 @@ var app = builder.Build();
 //app.MapGet("/", () => "Hello World!");
 app.MapGet(
     pattern: "/",
-    handler: (TokenService service)
-        => service.Create());
+    handler: (
+        TokenService service,
+        ClaimsPrincipal user)
+        => new
+        {
+            Token = service.Create(),
+            User = user.Identity.Name
+            //User = user.Identity.IsAuthenticated
+            //User = user.IsInRole
+        });
 
 app.Run();
