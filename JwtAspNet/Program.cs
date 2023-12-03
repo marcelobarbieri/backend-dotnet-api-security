@@ -1,5 +1,5 @@
+using JwtAspNet.Models;
 using JwtAspNet.Services;
-using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,18 +7,20 @@ builder.Services.AddTransient<TokenService>();
 
 var app = builder.Build();
 
-//app.MapGet("/", () => "Hello World!");
 app.MapGet(
     pattern: "/",
-    handler: (
-        TokenService service,
-        ClaimsPrincipal user)
-        => new
+    handler: (TokenService service)
+        => 
         {
-            Token = service.Create(),
-            User = user.Identity.Name
-            //User = user.Identity.IsAuthenticated
-            //User = user.IsInRole
+            var user = new User(
+                Id:1,
+                Name:"André Baltieri",
+                Email:"xyz@balta.io",
+                Image:"https://balta.io/",
+                Password:"xyz",
+                Roles:new[] { "student", "premium" });
+
+            return service.Create(user);
         });
 
 app.Run();
