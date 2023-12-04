@@ -32,7 +32,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapGet(
-    pattern: "/",
+    pattern: "/login",
     handler: (TokenService service)
         => 
         {
@@ -46,6 +46,12 @@ app.MapGet(
 
             return service.Create(user);
         });
+
+app
+    .MapGet(
+        pattern: "/restrito",
+        handler: () => "Você tem acesso!")
+    .RequireAuthorization();
 
 app.Run();
  
