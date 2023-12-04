@@ -24,7 +24,11 @@ builder.Services
             ValidateAudience = false
         };
     });
-builder.Services.AddAuthorization();
+builder.Services
+    .AddAuthorization(options =>
+    {
+        options.AddPolicy("Admin", p => p.RequireRole("admin"));
+    });
 
 var app = builder.Build();
 
@@ -52,6 +56,13 @@ app
         pattern: "/restrito",
         handler: () => "Você tem acesso!")
     .RequireAuthorization();
+
+app
+    .MapGet(
+        pattern: "/admin",
+        handler: () => "Você tem acesso!")
+    .RequireAuthorization("Admin");
+
 
 app.Run();
  
