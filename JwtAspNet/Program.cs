@@ -3,6 +3,7 @@ using JwtAspNet.Models;
 using JwtAspNet.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,7 +55,15 @@ app.MapGet(
 app
     .MapGet(
         pattern: "/restrito",
-        handler: () => "Você tem acesso!")
+        handler: (ClaimsPrincipal user) =>
+            new
+            {
+                id = user.Claims.FirstOrDefault(x=> x.Type == "id").Value,
+                name = user.Claims.FirstOrDefault(x=> x.Type == ClaimTypes.Name).Value,
+                email = user.Claims.FirstOrDefault(x=> x.Type == ClaimTypes.Email).Value,
+                givenName = user.Claims.FirstOrDefault(x=> x.Type == ClaimTypes.GivenName).Value,
+                image = user.Claims.FirstOrDefault(x=> x.Type == "image").Value
+            })
     .RequireAuthorization();
 
 app
