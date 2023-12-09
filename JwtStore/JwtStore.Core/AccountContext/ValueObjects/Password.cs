@@ -8,6 +8,19 @@ public class Password : ValueObject
     private const string Valid = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
     private const string Special = "!@#$%ˆ&*(){}[];";
 
+    protected Password()
+    {
+
+    }
+
+    public Password(string? text = null)
+    {
+        if (string.IsNullOrEmpty(text) || string.IsNullOrWhiteSpace(text))
+            text = Generate();
+
+        Hash = Hashing(text);
+    }
+
     public string Hash { get; } = String.Empty;
     public string ResetCode { get; } = Guid.NewGuid().ToString("N")[..8].ToUpper();
 
