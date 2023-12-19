@@ -16,7 +16,7 @@ public class User : Entity
         Password = new Password(password);
     }
 
-    public string Nome { get; private set; } = string.Empty;
+    public string Name { get; private set; } = string.Empty;
     public Email Email { get; private set; } = null!;
     public Password Password { get; private set; } = null!;
     public string Image { get; private set; } = string.Empty;
