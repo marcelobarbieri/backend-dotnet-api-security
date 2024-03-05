@@ -1,4 +1,6 @@
-﻿using JwtStore.Core.Contexts.AccountContext.UseCases.Create.Contracts;
+﻿using JwtStore.Core.Contexts.AccountContext.Entities;
+using JwtStore.Core.Contexts.AccountContext.UseCases.Create.Contracts;
+using JwtStore.Core.Contexts.AccountContext.ValueObjects;
 
 namespace JwtStore.Core.Contexts.AccountContext.UseCases.Create;
 
@@ -33,8 +35,26 @@ public class Handler
         }
 
         #endregion
+
+        #region 02. Gerar os objetos
+
+        Email email;
+        Password password;
+        User user;
+
+        try
+        {
+            email = new Email(request.Email);
+            password = new Password(request.Password);
+            user = new User(request.Name,email,password);
+        }
+        catch (Exception ex)
+        {
+            return new Response(ex.Message, 400);                        
+        }
+
+        #endregion
         
-        // 02 - Gerar os objetos
         // 03 - Verificar se o usuário existe
         // 04 - Persistir os dados
         // 05 - Enviar e-mail de ativação
