@@ -19,6 +19,24 @@ public class Handler
         Request request, 
         CancellationToken cancellationToken)
     {
+        #region 01. Valida a requisição
 
+        try
+        {
+            var res = Specification.Ensure(request);
+            if (!res.IsValid)
+                return new Response("Requisição inválida",400,res.Notifications);
+        }
+        catch 
+        {
+            return new Response("Não foi possível validar sua requisição", 500);
+        }
+
+        #endregion
+        
+        // 02 - Gerar os objetos
+        // 03 - Verificar se o usuário existe
+        // 04 - Persistir os dados
+        // 05 - Enviar e-mail de ativação
     }
 }
