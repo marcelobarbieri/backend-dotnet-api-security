@@ -18,7 +18,7 @@ public class Handler
     }
 
     public async Task<Response> Handle(
-        Request request, 
+        Request request,
         CancellationToken cancellationToken)
     {
         #region 01. Valida a requisição
@@ -27,9 +27,9 @@ public class Handler
         {
             var res = Specification.Ensure(request);
             if (!res.IsValid)
-                return new Response("Requisição inválida",400,res.Notifications);
+                return new Response("Requisição inválida", 400, res.Notifications);
         }
-        catch 
+        catch
         {
             return new Response("Não foi possível validar sua requisição", 500);
         }
@@ -46,16 +46,30 @@ public class Handler
         {
             email = new Email(request.Email);
             password = new Password(request.Password);
-            user = new User(request.Name,email,password);
+            user = new User(request.Name, email, password);
         }
         catch (Exception ex)
         {
-            return new Response(ex.Message, 400);                        
+            return new Response(ex.Message, 400);
         }
 
         #endregion
-        
-        // 03 - Verificar se o usuário existe
+
+        #region 03. Verifica se o usuário existe
+
+        try
+        {
+            var exists = await _repository.AnyAsync(request.Email, cancellationToken);
+            if (exists)
+                return new Response("Este e-mail já está em uso", 400);
+        }
+        catch 
+        {
+            return new Response("Falha ao verificar e-mail cadastrado", 500);
+        }
+
+        #endregion
+
         // 04 - Persistir os dados
         // 05 - Enviar e-mail de ativação
     }

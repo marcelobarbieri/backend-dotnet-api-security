@@ -2,5 +2,5 @@
 
 public interface IRepository
 {
-
+    Task<bool> AnyAsync(string email, CancellationToken cancellationToken);
 }
