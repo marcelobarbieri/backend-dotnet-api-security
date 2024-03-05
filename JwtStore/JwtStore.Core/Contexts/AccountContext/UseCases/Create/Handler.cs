@@ -70,7 +70,32 @@ public class Handler
 
         #endregion
 
-        // 04 - Persistir os dados
-        // 05 - Enviar e-mail de ativação
+        #region 04. Persiste os dados
+
+        try
+        {
+            await _repository.SaveAsync(user, cancellationToken);
+        }
+        catch
+        {
+            return new Response("Falha ao persistir dados",500);
+        }
+
+        #endregion
+
+        #region 05. Envia e-mail de ativação
+
+        try
+        {
+            await _service.SendVerificationEmailAsync(user,cancellationToken);
+        }
+        catch
+        {
+            // do nothing
+        }
+
+        #endregion
+
+        return new Response("Conta criada", new ResponseData(user.Id, user.Name, user.Email));
     }
 }
