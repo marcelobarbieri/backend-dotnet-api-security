@@ -32,7 +32,7 @@ public static class AccountContextExtension
         {
             var result = await handler.Handle(request, new CancellationToken());
             return result.IsSucess
-                ? Results.Created("",result)
+                ? Results.Created($"api/v1/users/{result.Data?.Id}", result)
                 : Results.Json(result, statusCode: result.Status);
         });
 
