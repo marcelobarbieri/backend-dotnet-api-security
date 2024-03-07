@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using JwtStore.Core.Contexts.AccountContext.Entities;
 
-namespace JwtStore.Core.Contexts.AccountContext.UseCases.Authenticate.Contracts
+namespace JwtStore.Core.Contexts.AccountContext.UseCases.Authenticate.Contracts;
+
+public interface IRepository
 {
-    internal interface IRepository
-    {
-    }
+    Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken);
 }
