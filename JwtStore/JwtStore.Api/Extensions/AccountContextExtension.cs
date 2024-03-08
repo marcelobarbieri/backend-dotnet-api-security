@@ -18,6 +18,14 @@ public static class AccountContextExtension
             JwtStore.Infra.Contexts.AccountContext.UseCases.Create.Service>(); // Implementação
 
         #endregion
+
+        #region Authenticate
+
+        builder.Services.AddTransient<
+            JwtStore.Core.Contexts.AccountContext.UseCases.Authenticate.Contracts.IRepository, // Interface
+            JwtStore.Infra.Contexts.AccountContext.UseCases.Authenticate.Repository>(); // Implementação
+
+        #endregion
     }
 
     public static void MapAccountEndpoints(this WebApplication app)
@@ -33,6 +41,22 @@ public static class AccountContextExtension
             var result = await handler.Handle(request, new CancellationToken());
             return result.IsSucess
                 ? Results.Created($"api/v1/users/{result.Data?.Id}", result)
+                : Results.Json(result, statusCode: result.Status);
+        });
+
+        #endregion
+
+        #region Authenticate
+
+        app.MapPost("api/v1/authenticate", async (
+            JwtStore.Core.Contexts.AccountContext.UseCases.Authenticate.Request request,
+            IRequestHandler<
+                JwtStore.Core.Contexts.AccountContext.UseCases.Authenticate.Request,
+                JwtStore.Core.Contexts.AccountContext.UseCases.Authenticate.Response> handler) =>
+        {
+            var result = await handler.Handle(request, new CancellationToken());
+            return result.IsSucess
+                ? Results.Ok(result)
                 : Results.Json(result, statusCode: result.Status);
         });
 
