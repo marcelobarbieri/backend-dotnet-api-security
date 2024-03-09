@@ -64,7 +64,9 @@ public static class AccountContextExtension
             result.Data.Token = JwtExtension.Generate(result.Data);
 
             return Results.Ok(result);
-        });
+        })
+        .RequireAuthorization("Admin,Student");
+        //.AllowAnonymous();
 
         #endregion
     }
